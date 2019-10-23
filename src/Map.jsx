@@ -4,6 +4,8 @@ import * as Usoutline from "./us_outline.json"
 import * as States from "./states.json";
 import * as County from "./county.json";
 import * as Congressional from "./congressional.json";
+import axios from 'axios';
+
 
 
 
@@ -45,12 +47,53 @@ class Map extends React.Component {
       fillOpacity: 0.2
     };
   }
-  
+
   whenClicked=(e) =>{
     // e = event
-    console.log(e.target.feature);
-    // You can make your ajax call declaration here
-    //$.ajax(... 
+    let state,county,url;
+    state=e.target.feature.properties.STATE;
+    if(e.target.feature.properties.COUNTY!==undefined){
+      county=e.target.feature.properties.COUNTY;
+      
+    url=`https://api.census.gov/data/2013/language?get=EST,LAN7,LANLABEL,NAME&for=county:${county}&in=state:${state}&key=c6b213357c951f788c3eb1916c6d718c59b55a8d`
+    }else{
+
+    url=`https://api.census.gov/data/2013/language?get=EST,LAN7,LANLABEL,NAME&for=state:${state}&key=c6b213357c951f788c3eb1916c6d718c59b55a8d`
+    
+    }
+   
+    axios.defaults.headers.post['Content-Type'] = 'application/json';
+
+    axios.get(url)
+   
+    .then(res => {
+      const census= res.data;
+      let HtmlRender='<div>No Languages Results Found!</div>'
+      if(res.data!==""){
+      
+      HtmlRender="<div>";
+      for(let i=0;i<census.length;i++){
+        if(i!==0){
+         HtmlRender+=`<ol><li>EST Population:${census[i][0]}</li>
+         <li>LAN7:${census[i][1]}</li>
+         <li>LANLABEL:${census[i][2]}</li>
+         <li>NAME:${census[i][3]}</li>
+         <li>LOCATION:${census[i][4]}</li>
+         </ol>
+         <hr>
+         `
+        }
+      }
+      HtmlRender+="</div>"
+    }
+      let popup = L.popup()
+    .setLatLng(e.latlng)
+    .setContent(HtmlRender)
+    .openOn(this.map);
+   
+    
+  }) 
+   
   }
   
  onEachFeature=(feature, layer)=>{
