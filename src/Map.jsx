@@ -50,6 +50,7 @@ class Map extends React.Component {
 
   whenClicked=(e) =>{
     // e = event
+    console.log("jkdlfhdsjlhfjds",e.target.feature)
     let state,county,url;
     state=e.target.feature.properties.STATE;
     if(e.target.feature.properties.COUNTY!==undefined){
