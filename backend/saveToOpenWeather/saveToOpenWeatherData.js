@@ -3,8 +3,12 @@ let mysql = require('mysql');
 let fetch =require('node-fetch')
 const sleep = require('util').promisify(setTimeout)
 const dbConfig = require("../config/db.config");
+<<<<<<< HEAD
 const openWeatherKey=require("../config/openWeatherKey")
 let OpenWeatherApiKey=openWeatherKey.key
+=======
+let OpenWeatherApiKey='APIKEY'
+>>>>>>> 947150f554f22a2201849cf604d2049d81c557c8
 
 let con = mysql.createConnection({
   host: dbConfig.HOST,
