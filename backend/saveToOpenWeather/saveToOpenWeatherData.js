@@ -3,7 +3,8 @@ let mysql = require('mysql');
 let fetch =require('node-fetch')
 const sleep = require('util').promisify(setTimeout)
 const dbConfig = require("../config/db.config");
-let OpenWeatherApiKey='475bd3c9e82df38ab4f14f46e6130dc5'
+const openWeatherKey=require("../config/openWeatherKey")
+let OpenWeatherApiKey=openWeatherKey.key
 
 let con = mysql.createConnection({
   host: dbConfig.HOST,
@@ -18,7 +19,7 @@ con.connect(function(err) {
 });
 
 async function getOpenWeatherData(recursiveRun=false){
-  console.log("start openWeatherData",caliJson,"###########")
+  console.log("start openWeatherData",caliJson)
 
   let openweathermap=`https://api.openweathermap.org/data/2.5/weather?q=`;
   let error=false;
