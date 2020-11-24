@@ -9,8 +9,9 @@ class App extends React.Component {
     
     return (
       <div className="App">
+       
         <Map/>
-               
+        <div class="loader">Loading...</div>
       </div>
     );
   }

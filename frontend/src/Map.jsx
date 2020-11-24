@@ -1,8 +1,8 @@
 import React from "react";
 import L from "leaflet";
 
-import * as CaliforniaCites from "./CalifroniaBoundaries.json"
-import axios from 'axios';
+
+
 
 
 
@@ -11,7 +11,7 @@ class Map extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {weather:[]};
+    this.state = {weather:[],CaliforniaCites:{default:{features:[]}}};
   }
   
   searchWeatherData(key){
@@ -128,6 +128,10 @@ class Map extends React.Component {
   async componentDidMount() {
     // create map
     // check if data has changed
+    let CalifroniaBoundaries=await fetch("https://opendata.arcgis.com/datasets/ccbaf8862171465cad234108cd098b47_0.geojson")
+    console.log("what is the data",CalifroniaBoundaries)
+    CalifroniaBoundaries=await CalifroniaBoundaries.json()
+    console.log("after bounderaies json",CalifroniaBoundaries)
     this.usmap=L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -178,7 +182,7 @@ class Map extends React.Component {
         console.log("waitinf")
     let responseWeather=await weatherData.json()
     console.log("waitinf",responseWeather)
-    this.setState({weather:responseWeather})
+    this.setState({weather:responseWeather,CaliforniaCites:CalifroniaBoundaries})
 
     try {
       setInterval(async()=>{
@@ -200,9 +204,9 @@ class Map extends React.Component {
   componentDidUpdate() {
     
     
+ 
    
-   
-    let California=L.geoJSON(CaliforniaCites.default.features,{style:this.mapStyle,onEachFeature:this.onEachFeature}).addTo(this.map)
+    let California=L.geoJSON(this.state.CaliforniaCites.features,{style:this.mapStyle,onEachFeature:this.onEachFeature}).addTo(this.map)
     let baseMaps = {
       "US": this.usmap,
   };
@@ -218,7 +222,7 @@ class Map extends React.Component {
   }
   render() {
     console.log("whats thestats",this.state)
-    return <div id="map"/>;
+    return <div id="map">  </div>;
   }
 }
 
